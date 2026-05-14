@@ -3,7 +3,7 @@ Lightweight, easy-to-use plugin manager.
 
 # Examples
 
-* API
+* API<br>
 In the example shown, the plugin maker will be able to access the service by simply typing ```Services.Players```
 ```
 --Services.luau
@@ -25,7 +25,7 @@ return {
 }
 ```
 
-* Plugin Loading
+* Plugin Loading<br>
 Author and Name are generally suggested if you plan on debugging or using ```import()```
 ```
 --PluginHandler.luau
