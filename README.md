@@ -1,54 +1,60 @@
-# Plugin
+# Plugins
+Lightweight, easy-to-use plugin manager.
 
-A lightweight, sandboxed plugin system for Roblox that allows for modular code execution, dynamic API injection, and inter-plugin communication via imports/exports.
+# Examples
 
-## Features
+* API
+In the example shown, the plugin maker will be able to access the service by simply typing ```Services.Players```
+```
+--Services.luau
 
-- **Sandboxed Execution**: Runs plugin code within a custom environment using `loadstring`.
-- **Inter-Plugin Communication**: Built-in `import()` and `export()` functions to share functionality between loaded plugins.
-- **Lifecycle Events**: Signals for `Init`, `Start`, and `Stop` phases.
-- **Dynamic API**: Automatically loads and injects modules from an API folder into the plugin's global environment.
-- **Dependency Management**: Uses a namespace system (`Author/Name`) for indexing and retrieving loaded plugins.
+local Players = game:GetService("Players")
 
-## Prerequisites
+return {
+    ["Players"] = {
+        GetPlayer = function(searchProperty, propertyValue)
+            local playersFound = {}
+            
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player[searchProperty] == propertyValue then table.insert(playersFound, player) end
+            end
 
-To use this system, you must enable the following in your Game Settings:
-1. **Allow HTTP Requests** (Required for GUID generation).
-2. **Enable LoadStringEnabled** in `ServerScriptService`.
+            return if #playersFound == 1 then playersFound[1] else playersFound
+        end
+    }
+}
+```
 
-## Installation
+* Plugin Loading
+Author and Name are generally suggested if you plan on debugging or using ```import()```
+```
+--PluginHandler.luau
 
-1. Place the main script in your project.
-2. Create an `API` folder containing the ModuleScripts you want to expose to your plugins.
-3. Create a `Packages` folder containing a `Signal` module (e.g., FastSignal or GoodSignal).
+PluginExecutor.ReloadAPI()
 
-## Usage
-
-### 1. Initializing the System
-```lua
-local PluginSystem = require(path.to.Plugin)
-
--- Load the API modules
-PluginSystem.ReloadAPI()
-
--- Create a new plugin instance
-local myPlugin = PluginSystem.new({
-    Name = "MyCoolPlugin",
-    Author = "DevName",
-    PluginCode = [[
-        print("Plugin initialized!")
-        
-        -- Exporting functions for other plugins
-        export({
-            SayHello = function() print("Hello from MyCoolPlugin!") end
-        })
-        
-        -- Listening to lifecycle events
-        plugin.Start:Connect(function()
-            print("Plugin started!")
-        end)
-    ]]
+local newPlugin = PluginExecutor.new({
+    Name = "TestPlugin",
+    Author = "User" -- if nil, uses "Unknown Publisher",
+    PluginCode = ""
 })
 
-myPlugin:Init()
-myPlugin:Start()
+newPlugin:Init()
+newPlugin:Start()
+```
+
+* Plugin
+```
+plugin.Start:Wait()
+
+if plugin.ImportsAllowed and plugin.ExportsAllowed then
+    plugin.Stop:Fire()
+end
+
+import("User/TestPlugin")
+
+export({
+    Division = function(a, b)
+        return a / b
+    end
+})
+```

@@ -61,13 +61,13 @@ Plugin.__index = Plugin
 
 Plugin.LoadedPlugins = {}
 
-function Plugin.new(pluginConfig:any)
+function Plugin.new(pluginConfig: any)
     local self = setmetatable({}, Plugin)
 
     self.ImportsAllowed = true
     self.ExportsAllowed = true
 
-    Merge(self, pluginConfig)
+    Merge(self, pluginConfig or {})
 
     self.Id = HTTPService:GenerateGUID(false)
     self._exports = {}
@@ -100,7 +100,7 @@ function Plugin.new(pluginConfig:any)
         ["plugin"] = {
             Init = ReturnListenables(self.Signals.InitializedSignal),
             Start = ReturnListenables(self.Signals.StartedSignal),
-            Stop = ReturnListenables(self.Signals.StoppedSignal),
+            Stop = self.Signals.StoppedSignal,
             ImportsAllowed = self.ImportsAllowed,
             ExportsAllowed = self.ExportsAllowed
         }
@@ -113,15 +113,31 @@ end
 function Plugin:Init()
     if not self.Initialized and not self.Started then
         local pluginCode = self.PluginCode
-        local loadedPlugin = loadstring(pluginCode)
+        local loadedPlugin = loadstring(pluginCode, (self.Author or "UnknownPublisher") .. "/" .. (self.Name or self.Id))
 
         setfenv(loadedPlugin, self.API)
 
-        local success, result = pcall(loadedPlugin)
+        local connection
 
-        if not success then 
-            warn("Plugin " .. self.Id .. " by " .. (self.Author or "UnknownPublisher") .. " ran into a problem. Error: ", result)
-        end
+        local pluginThread = task.spawn(function()
+            local success, result = pcall(loadedPlugin)
+
+            if not success then 
+                warn("Plugin " .. self.Id .. " by " .. (self.Author or "UnknownPublisher") .. " ran into a problem. Error: ", result)
+            end
+        end)
+
+        connection = self.Signals.StoppedSignal:Connect(function()
+            self.Started = false
+           self.Initialized = false
+
+            if pluginThread then
+                task.cancel(pluginThread)
+                connection:Disconnect()
+            else
+                connection:Disconnect()
+            end
+        end)
 
         self.Signals.InitializedSignal:Fire()
         self.Initialized = true
