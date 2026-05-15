@@ -1,8 +1,6 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local HTTPService = game:GetService("HttpService")
 
 assert(ServerScriptService.LoadStringEnabled, "LoadString must be enabled in order to use plugins.")
-assert(HTTPService.HttpEnabled, "Http must be enabled in order to use plugins.")
 
 local API = script.Parent.Parent:WaitForChild("API")
 local Packages = script.Parent:WaitForChild("Packages")
