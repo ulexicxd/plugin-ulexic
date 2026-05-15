@@ -1,5 +1,5 @@
 # Plugins
-Lightweight, easy-to-use plugin manager.
+Lightweight, easy-to-use custom plugin manager.
 
 # Examples
 
@@ -44,6 +44,8 @@ newPlugin:Start()
 
 * Plugin
 ```
+--Plugin.init.luau
+
 plugin.Start:Wait()
 
 if plugin.ImportsAllowed and plugin.ExportsAllowed then
