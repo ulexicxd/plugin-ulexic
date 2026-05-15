@@ -28,13 +28,13 @@ return {
 * Plugin Loading<br>
 Author and Name are generally suggested if you plan on debugging or using ```import()```
 ```
---PluginHandler.luau
+--PluginHandler.init.luau
 
 PluginExecutor.ReloadAPI()
 
 local newPlugin = PluginExecutor.new({
     Name = "TestPlugin",
-    Author = "User" -- if nil, uses "Unknown Publisher",
+    Author = "User", -- if nil, uses "Unknown Publisher",
     PluginCode = ""
 })
 
