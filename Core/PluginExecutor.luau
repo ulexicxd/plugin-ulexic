@@ -1,4 +1,5 @@
 local ServerScriptService = game:GetService("ServerScriptService")
+local HTTPService = game:GetService("HttpService")
 
 assert(ServerScriptService.LoadStringEnabled, "LoadString must be enabled in order to use plugins.")
 
