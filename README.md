@@ -44,6 +44,8 @@ newPlugin:Start()
 
 * Plugin
 ```
+--Plugin.init.luau
+
 plugin.Start:Wait()
 
 if plugin.ImportsAllowed and plugin.ExportsAllowed then
