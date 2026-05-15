@@ -28,7 +28,7 @@ return {
 * Plugin Loading<br>
 Author and Name are generally suggested if you plan on debugging or using ```import()```
 ```
---PluginHandler.luau
+--PluginHandler.init.luau
 
 PluginExecutor.ReloadAPI()
 
