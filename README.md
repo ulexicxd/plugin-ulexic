@@ -34,7 +34,7 @@ PluginExecutor.ReloadAPI()
 
 local newPlugin = PluginExecutor.new({
     Name = "TestPlugin",
-    Author = "User" -- if nil, uses "Unknown Publisher",
+    Author = "User", -- if nil, uses "Unknown Publisher",
     PluginCode = ""
 })
 
