@@ -25,14 +25,14 @@ end
 
 local function ReturnListenables(signal)
 	return {
-		Connect = function(...)
-			return signal:Connect(...)
+		Connect = function(self, callback)
+			return signal:Connect(callback)
 		end,
-		Wait = function()
+		Wait = function(self)
 			return signal:Wait()
 		end,
-		Once = function(...)
-			return signal:Once(...)
+		Once = function(self, callback)
+			return signal:Once(callback)
 		end,
 	}
 end
